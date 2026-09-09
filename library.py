@@ -58,11 +58,14 @@ class Library:
 
     def search_books(self, query: str):
         query_lower = query.lower()
-        return [
-            b for b in self.books.values() # игнорируем ключи (isbn)
-            if query_lower in b.title.lower() or query_lower in b.author.lower()
-            or query_lower in b.isbn.lower()
-        ]
+        results = []
+        for b in self.books.values():
+            title_match = query_lower in b.title.lower()
+            author_match = query_lower in b.author.lower()
+            isbn_match = query_lower in b.isbn.lower()
+            if title_match or author_match or isbn_match:
+                results.append(b)
+        return results
 
     def add_user(self, user: User):
         if user.user_id in self.users:
@@ -108,11 +111,12 @@ class Library:
                 f"У пользователя {user.name} нет книги с ISBN {isbn}."
             )
 
-        record = next(
-            (r for r in self.records
-             if r.isbn == isbn and r.user_id == user_id and not r.is_returned),
-            None,
-        )
+        record = None
+        for r in self.records:
+            if r.isbn == isbn and r.user_id == user_id and not r.is_returned:
+                record = r
+                break
+
         if record is None:
             raise BookNotBorrowedByUserError("Активная запись о выдаче не найдена.")
 
@@ -127,4 +131,8 @@ class Library:
 
     def get_overdue_records(self, today: date = None):
         today = today or date.today()
-        return [r for r in self.records if r.is_overdue(today)]
+        overdue_list = []
+        for r in self.records:
+            if r.is_overdue(today):
+                overdue_list.append(r)
+        return overdue_list
