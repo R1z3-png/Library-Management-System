@@ -43,30 +43,30 @@ class Library:
 
     def add_book(self, book: Book):
         if book.isbn in self.books:
-            raise LibraryError(f"Книга с ISBN {book.isbn} уже существует в каталоге.")
+            raise LibraryError("Книга с таким ISBN уже существует в каталоге")
         self.books[book.isbn] = book
 
     def remove_book(self, isbn: str):
         book = self.books.get(isbn)
         if book is None:
-            raise BookNotFoundError(f"Книга с ISBN {isbn} не найдена.")
+            raise BookNotFoundError("Книга с таким ISBN  не найдена.")
         if not book.is_available:
             raise BookNotAvailableError(
-                f"Невозможно удалить книгу {isbn} — она выдана читателю."
+                f"Невозможно удалить выбранную книгу — она выдана читателю."
             )
         del self.books[isbn]
 
     def search_books(self, query: str):
         query_lower = query.lower()
         return [
-            b for b in self.books.values()
+            b for b in self.books.values() # игнорируем ключи (isbn)
             if query_lower in b.title.lower() or query_lower in b.author.lower()
             or query_lower in b.isbn.lower()
         ]
 
     def add_user(self, user: User):
         if user.user_id in self.users:
-            raise LibraryError(f"Пользователь с ID {user.user_id} уже существует.")
+            raise LibraryError("Пользователь с таким ID уже существует.")
         self.users[user.user_id] = user
 
     def find_user(self, user_id: str) -> User:
