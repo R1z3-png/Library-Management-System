@@ -39,7 +39,7 @@ class Library:
     def __init__(self):
         self.books = {} # ускоряет поиск по ключу
         self.users = {}
-        self.records = []
+        self.records = [] # история заимствований
 
     def add_book(self, book: Book):
         if book.isbn in self.books:
@@ -47,7 +47,7 @@ class Library:
         self.books[book.isbn] = book
 
     def remove_book(self, isbn: str):
-        book = self.books.get(isbn)
+        book = self.books.get(isbn) # ищем по ключу
         if book is None:
             raise BookNotFoundError("Книга с таким ISBN  не найдена.")
         if not book.is_available:
@@ -136,3 +136,6 @@ class Library:
             if r.is_overdue(today):
                 overdue_list.append(r)
         return overdue_list
+
+    def get_borrow_history(self):
+        return self.records[:]

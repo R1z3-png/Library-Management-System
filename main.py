@@ -4,7 +4,6 @@
 """
 
 from datetime import date
-
 from book import Book
 from user import Student, Faculty, Guest
 from library import Library
@@ -28,6 +27,7 @@ def print_menu():
     print("7. Показать просроченные книги (overdue)")
     print("8. Показать все книги")
     print("9. Показать всех пользователей")
+    print("10. Показать историю заимствований")
     print("0. Выход")
 
 
@@ -130,6 +130,29 @@ def list_users_flow(library: Library):
     for u in library.users.values():
         print(" ", u)
 
+def history_flow(library: Library):
+    history = library.get_borrow_history()
+    if not history:
+        print("История заимствований пуста.")
+        return
+
+    for r in history:
+        book = library.books.get(r.isbn)
+        user = library.users.get(r.user_id)
+        title = book.title if book else r.isbn
+        name = user.name if user else r.user_id
+
+        if r.is_returned:
+            status = f"возвращена {r.return_date.isoformat()}"
+        else:
+            status = "не возвращена"
+
+        print(
+            f"  \"{title}\" — {name}, "
+            f"взята: {r.borrow_date.isoformat()}, "
+            f"срок: {r.due_date.isoformat()}, "
+            f"статус: {status}"
+        )
 
 def main():
     library = Library()
@@ -143,6 +166,7 @@ def main():
         "7": overdue_flow,
         "8": list_books_flow,
         "9": list_users_flow,
+        "10": history_flow
     }
 
     while True:
