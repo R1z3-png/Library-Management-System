@@ -4,7 +4,6 @@ Library —  управление книгами, пользователями �
 '''
 
 from datetime import date, timedelta
-
 from book import Book
 from user import User
 from exceptions import (
@@ -49,11 +48,9 @@ class Library:
     def remove_book(self, isbn: str):
         book = self.books.get(isbn) # ищем по ключу
         if book is None:
-            raise BookNotFoundError("Книга с таким ISBN  не найдена.")
+            raise BookNotFoundError("Книга с таким ISBN  не найдена")
         if not book.is_available:
-            raise BookNotAvailableError(
-                f"Невозможно удалить выбранную книгу — она выдана читателю."
-            )
+            raise BookNotAvailableError(f"Невозможно удалить выбранную книгу — она выдана читателю")
         del self.books[isbn]
 
     def search_books(self, query: str):
@@ -69,29 +66,26 @@ class Library:
 
     def add_user(self, user: User):
         if user.user_id in self.users:
-            raise LibraryError("Пользователь с таким ID уже существует.")
+            raise LibraryError("Пользователь с таким ID уже существует")
         self.users[user.user_id] = user
 
-    def find_user(self, user_id: str) -> User:
+    def find_user(self, user_id: str):
         user = self.users.get(user_id)
         if user is None:
-            raise UserNotFoundError(f"Пользователь с ID {user_id} не найден.")
+            raise UserNotFoundError("Пользователь с таким ID не найден")
         return user
 
     def borrow_book(self, isbn: str, user_id: str, today: date = None):
         today = today or date.today()
-
         book = self.books.get(isbn)
         if book is None:
-            raise BookNotFoundError(f"Книга с ISBN {isbn} не найдена.")
+            raise BookNotFoundError("Книга с таким ISBN не найдена.")
         if not book.is_available:
-            raise BookNotAvailableError(f"Книга \"{book.title}\" уже выдана.")
+            raise BookNotAvailableError("Книга уже выдана.")
 
         user = self.find_user(user_id)
         if not user.can_borrow():
-            raise BorrowLimitExceededError(
-                f"{user.name} достиг лимита книг ({user.MAX_BOOKS})."
-            )
+            raise BorrowLimitExceededError(f"{user.name} достиг лимита книг ({user.MAX_BOOKS}).")
 
         due_date = today + timedelta(days=user.LOAN_DAYS)
         record = BorrowRecord(isbn, user_id, today, due_date)
@@ -107,9 +101,7 @@ class Library:
 
         user = self.find_user(user_id)
         if isbn not in user.borrowed_books:
-            raise BookNotBorrowedByUserError(
-                f"У пользователя {user.name} нет книги с ISBN {isbn}."
-            )
+            raise BookNotBorrowedByUserError(f"У пользователя {user.name} нет книги с таким ISBN.")
 
         record = None
         for r in self.records:

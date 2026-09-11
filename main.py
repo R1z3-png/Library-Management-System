@@ -1,6 +1,5 @@
 """
-Точка входа: консольное меню для управления библиотечной системой.
-Никакой бизнес-логики здесь — только ввод/вывод и вызовы Library.
+Основное меню управления
 """
 
 from datetime import date
@@ -12,12 +11,12 @@ from exceptions import LibraryError
 USER_TYPES = {
     "1": Student,
     "2": Faculty,
-    "3": Guest,
+    "3": Guest
 }
 
 
 def print_menu():
-    print("\n=== Библиотечная система ===")
+    print("\n --- Выберите действие: --- ")
     print("1. Добавить книгу")
     print("2. Удалить книгу")
     print("3. Найти книгу")
@@ -62,7 +61,7 @@ def search_book_flow(library: Library):
 
 
 def add_user_flow(library: Library):
-    print("Тип пользователя: 1 - Student, 2 - Faculty, 3 - Guest")
+    print("укажите тип пользователя: 1 - Student, 2 - Faculty, 3 - Guest")
     choice = input("Выбор: ").strip()
     user_cls = USER_TYPES.get(choice)
     if user_cls is None:
@@ -73,7 +72,7 @@ def add_user_flow(library: Library):
     name = input("Имя: ").strip()
     try:
         library.add_user(user_cls(user_id, name))
-        print(f"Пользователь {name} ({user_cls.__name__}) добавлен.")
+        print("Пользователь успешно добавлен")
     except LibraryError as e:
         print(f"Ошибка: {e}")
 

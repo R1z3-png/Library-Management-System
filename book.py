@@ -1,5 +1,5 @@
 '''
-Book - модель книги
+Book - модель книги, основнвые параметры, статус
 '''
 
 class Book:
@@ -10,20 +10,18 @@ class Book:
         self._is_available = True  # приватное поле — доступ только через property
 
     @property
-    def is_available(self) -> bool:
+    def is_available(self):
         return self._is_available
 
     @is_available.setter
     def is_available(self, value):
         if not isinstance(value, bool):
-            raise TypeError(
-                f"is_available должен быть bool, получено: {type(value).__name__}"
-            )
+            raise TypeError("указан неверный тип данных")
         self._is_available = value
 
     def mark_borrowed(self):
         if not self._is_available:
-            raise ValueError(f"Книга \"{self.title}\" уже выдана.")
+            raise ValueError(f"Книга \"{self.title}\" уже выдана")
         self._is_available = False
 
     def mark_returned(self):
@@ -34,6 +32,6 @@ class Book:
             status = "доступна"
         else:
             status = "выдана"
-        return f"[{self.isbn}] \"{self.title}\" — {self.author} ({status})"
+        return f"[{self.isbn}] \"{self.title}\", автор — {self.author} ({status})"
 
 

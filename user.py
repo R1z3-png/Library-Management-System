@@ -15,8 +15,7 @@ class User:
         return len(self.borrowed_books) < self.MAX_BOOKS
 
     def __str__(self):
-        return (f"{self.__class__.__name__} {self.name} (ID: {self.user_id}), "
-                f"книг на руках: {len(self.borrowed_books)}/{self.MAX_BOOKS}")
+        return (f"{self.__class__.__name__} {self.name} (ID: {self.user_id}), книг на руках: {len(self.borrowed_books)}/{self.MAX_BOOKS}")
 
 
 class Student(User):
